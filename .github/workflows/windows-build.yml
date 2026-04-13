@@ -1,1 +1,31 @@
+name: Build Vosk Windows
 
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Install CMake
+      uses: lukka/get-cmake@v3
+
+    - name: Configure
+      run: cmake -B build -A x64
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: vosk-win64
+        path: |
+          build/Release/vosk.exe
+          build/Release/libvosk.dll
